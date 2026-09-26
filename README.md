@@ -8,12 +8,23 @@ estimated energy.
 26 September 2026. Simulation, full-board implementation, timing and all
 four physical A/B runs pass on the Arty Z7-10 Rev. D. Both modes produce
 identical correct products in 12 clock periods, with four source reads in
-A and one in B. Power and energy differences have not been evaluated.
+A and one in B. The subsequent isolated-core Vivado estimate predicts about
+18.65% lower dynamic energy per product in B. This is not a measured board
+saving. The autonomous variant also passes physical repeated-run checks;
+electrical energy remains unmeasured because no instrument is available.
+
+The separate, instrumented full-design estimate predicts about 0.247% lower
+modeled device-total energy in B. Its activity-coverage and JTAG clock-model
+limitations are recorded in the [energy results](results/energy/README.md).
 [Results and raw hardware captures](results/README.md) record the evidence.
 The [interactive VIO/ILA demo](docs/live-demo.md) also has
 [verified weight-7 and weight-9 results](results/interactive/README.md).
 [Vivado view commands](docs/vivado-views.md) reopen the floorplan, schematic,
 VIO/ILA panels and saved hardware waveforms.
+The [energy experiment](docs/energy-experiment.md) adds matched core-power
+estimation and a separate autonomous repeated-run board variant.
+[Energy results](results/energy/README.md) separate the estimates, physical
+counter checks and remaining measurement limitations.
 
 ## Overview
 
@@ -407,6 +418,11 @@ experiment's one source BRAM from extra memories used by the ILA. Report
 both core resources and total board-design resources.
 
 ## 9. Energy evaluation
+
+The implemented follow-up is documented in
+[Temporal reuse: energy experiment](docs/energy-experiment.md), including
+software estimation, repeated-run hardware commands and the remaining
+electrical-instrumentation requirements. It preserves the original demo.
 
 | Evidence | Supported conclusion |
 | --- | --- |
@@ -1001,14 +1017,21 @@ full board implementation and timing: pass (100 MHz, positive setup/hold/pulse s
 read-only JTAG device discovery: pass (xc7z010_1)
 physical board programming: pass (one final bitstream for all four runs)
 physical A/B products, cycle and access checks: pass (both weights, A=4/B=1 reads)
-estimated energy difference: not run
-measured board energy difference: not run
+estimated energy difference: core dynamic about -18.65% in B (isolated-core model)
+complete-design estimate: device total about -0.247% in B (qualified vendor model)
+autonomous physical runs: pass (10 trials, including 10 million batches per trial)
+measured board energy difference: unavailable (no voltage/current instrument)
 ```
 
 [The physical results](results/README.md) include all four raw CSV captures,
 mapped-resource checks, reviewed DRC warnings and source/artifact hashes.
 The same product/read/load/cycle values in the simulation table below were
 also observed on the final programmed board.
+
+The [energy follow-up](results/energy/README.md) records the separate
+activity-annotated core estimate and autonomous board variant. Its 14-clock
+batch cadence includes launch/drain overhead around the unchanged 12-clock
+core computation. It does not replace the original single-batch evidence.
 
 The recorded **simulation** results for the required four-input workloads are:
 

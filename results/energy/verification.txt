@@ -1,0 +1,94 @@
+Verification excerpts — 26 September 2026
+Vivado/XSim 2018.1; xc7z010clg400-1
+
+Only relevant pass markers are reproduced. Full logs remain in external run directories.
+
+Baseline simulation (18 core cases and board-control protocol)
+Note: BOARD_CONTROL_SIMULATION_PASS
+Note: CASE PASS: baseline mode='0' N=4 weight=3 reads=4 loads=4 products=4 cycles=12
+Note: CASE PASS: baseline mode='1' N=4 weight=3 reads=1 loads=1 products=4 cycles=12
+Note: CASE PASS: weight_replacement mode='0' N=4 weight=-2 reads=4 loads=4 products=4 cycles=12
+Note: CASE PASS: weight_replacement mode='1' N=4 weight=-2 reads=1 loads=1 products=4 cycles=12
+Note: CASE PASS: address_selection mode='0' N=4 weight=5 reads=4 loads=4 products=4 cycles=12
+Note: CASE PASS: address_selection mode='1' N=4 weight=5 reads=1 loads=1 products=4 cycles=12
+Note: CASE PASS: reset_restart_phase_0 mode='0' N=4 weight=-2 reads=4 loads=4 products=4 cycles=12
+Note: CASE PASS: reset_restart_phase_1 mode='0' N=4 weight=-2 reads=4 loads=4 products=4 cycles=12
+Note: CASE PASS: reset_restart_phase_2 mode='0' N=4 weight=-2 reads=4 loads=4 products=4 cycles=12
+Note: CASE PASS: reset_restart_phase_0 mode='1' N=4 weight=-2 reads=1 loads=1 products=4 cycles=12
+Note: CASE PASS: reset_restart_phase_1 mode='1' N=4 weight=-2 reads=1 loads=1 products=4 cycles=12
+Note: CASE PASS: reset_restart_phase_2 mode='1' N=4 weight=-2 reads=1 loads=1 products=4 cycles=12
+Note: CASE PASS: signed_minimum_weight mode='0' N=4 weight=-32768 reads=4 loads=4 products=4 cycles=12
+Note: CASE PASS: signed_minimum_weight mode='1' N=4 weight=-32768 reads=1 loads=1 products=4 cycles=12
+Note: CASE PASS: signed_maximum_weight mode='0' N=4 weight=32767 reads=4 loads=4 products=4 cycles=12
+Note: CASE PASS: signed_maximum_weight mode='1' N=4 weight=32767 reads=1 loads=1 products=4 cycles=12
+Note: CASE PASS: single_input mode='0' N=1 weight=3 reads=1 loads=1 products=1 cycles=3
+Note: CASE PASS: single_input mode='1' N=1 weight=3 reads=1 loads=1 products=1 cycles=3
+Note: TEMPORAL_REUSE_ALL_TESTS_PASSED
+
+Repeater simulation (13 complete cases plus protocol/reset checks)
+Note: REPEATER_CASE_PASS mode='0' K=1 weight=7 cycles=14
+Note: REPEATER_CASE_PASS mode='1' K=1 weight=7 cycles=14
+Note: REPEATER_CASE_PASS mode='0' K=4 weight=7 cycles=56
+Note: REPEATER_CASE_PASS mode='1' K=4 weight=7 cycles=56
+Note: REPEATER_CASE_PASS mode='0' K=257 weight=-9 cycles=3598
+Note: REPEATER_CASE_PASS mode='1' K=257 weight=-9 cycles=3598
+Note: REPEATER_CASE_PASS mode='0' K=4 weight=-32768 cycles=56
+Note: REPEATER_CASE_PASS mode='1' K=4 weight=-32768 cycles=56
+Note: REPEATER_CASE_PASS mode='0' K=4 weight=-32768 cycles=56
+Note: REPEATER_CASE_PASS mode='1' K=4 weight=-32768 cycles=56
+Note: REPEATER_CASE_PASS mode='0' K=4 weight=-32768 cycles=56
+Note: REPEATER_CASE_PASS mode='1' K=4 weight=-32768 cycles=56
+Note: REPEATER_CASE_PASS mode='1' K=4 weight=-9 cycles=56
+Note: BATCH_REPEATER_ALL_TESTS_PASSED
+
+Matched mapped simulation and SAIF generation
+POWER_SIMULATION_PASS mode=1 weight=9 batches=1024 reads=1024 loads=1024 physical_reads=1024 physical_loads=1024 products=4096 captures=4096 completions=1024 window_ns=143360
+POWER_SAIF_PASS
+POWER_SIMULATION_PASS mode=0 weight=7 batches=1024 reads=4096 loads=4096 physical_reads=4096 physical_loads=4096 products=4096 captures=4096 completions=1024 window_ns=143360
+POWER_SAIF_PASS
+POWER_SIMULATION_PASS mode=0 weight=9 batches=1024 reads=4096 loads=4096 physical_reads=4096 physical_loads=4096 products=4096 captures=4096 completions=1024 window_ns=143360
+POWER_SAIF_PASS
+POWER_SIMULATION_PASS mode=1 weight=7 batches=1024 reads=1024 loads=1024 physical_reads=1024 physical_loads=1024 products=4096 captures=4096 completions=1024 window_ns=143360
+POWER_SAIF_PASS
+
+Power report completion
+POWER_REPORT_PASS
+POWER_REPORT_PASS
+POWER_REPORT_PASS
+POWER_REPORT_PASS
+
+Full energy-board build
+ENERGY_BOARD_BUILD_PASS
+
+Physical repeated runs and original-demo restoration
+ENERGY_REPEATER_CHECK_PASS: A 7 1 4 4 4 14 28 28
+ENERGY_REPEATER_CHECK_PASS: B 7 1 4 1 1 14 28 28
+ENERGY_REPEATER_CHECK_PASS: A 9 4 16 16 16 56 144 36
+ENERGY_REPEATER_CHECK_PASS: B 9 4 16 4 4 56 144 36
+ENERGY_REPEATER_CHECK_PASS: A -2 16 64 64 64 224 -128 -8
+ENERGY_REPEATER_CHECK_PASS: B -2 16 64 16 16 224 -128 -8
+ENERGY_REPEATER_CHECK_PASS: A 7 10000000 40000000 40000000 40000000 140000000 280000000 28
+ENERGY_REPEATER_CHECK_PASS: B 7 10000000 40000000 10000000 10000000 140000000 280000000 28
+ENERGY_REPEATER_CHECK_PASS: B 7 10000000 40000000 10000000 10000000 140000000 280000000 28
+ENERGY_REPEATER_CHECK_PASS: A 7 10000000 40000000 40000000 40000000 140000000 280000000 28
+ORIGINAL_INTERACTIVE_DEMO_RESTORED
+ENERGY_CHECKS_AND_RESTORE_COMPLETE
+
+Host validation: 5 capture-validator unit tests passed.
+Saved baseline hardware traces: FOUR_RUN_CAPTURE_CHECK_PASS.
+Source manifest: all listed hashes verified.
+No voltage/current data acquired; electrical energy not measured.
+
+Complete implemented PL: matched functional activity and qualified estimates
+BOARD_POWER_SIMULATION_PASS mode=0 weight=7 batches=256 reads=1024 loads=1024 products=1024 captures=1024 launches=256 completions=256 cycles=3584 checksum=7168 last_product=28 window_ns=35840
+BOARD_POWER_SIMULATION_PASS mode=1 weight=7 batches=256 reads=256 loads=256 products=1024 captures=1024 launches=256 completions=256 cycles=3584 checksum=7168 last_product=28 window_ns=35840
+BOARD_POWER_SAIF_PASS (both modes)
+BOARD_POWER_REPORT_PASS (both modes)
+BOARD_POWER_SUMMARY_PASS
+BOARD_POWER_RUN_PASS
+UNARMED_ILA_BOTH_MODES_PASS: arm_ctrl and icap_wr_en stayed zero over 35840000 ps.
+Physical power-net coverage: 8863/8879 in each mode; not rounded to 100%.
+Connectivity audit: 52 high-Z vector holes have zero physical drivers/loads.
+Connectivity audit: 16 unmatched debug RAM outputs have zero physical loads.
+JTAG TCK remains constraint-derived at 30.30 MHz despite idle simulation.
+Frozen full-design source/checkpoint hashes match the completed run.

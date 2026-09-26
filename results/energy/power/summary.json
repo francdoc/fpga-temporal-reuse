@@ -1,0 +1,696 @@
+{
+  "scope": "Isolated routed temporal_reuse core; full-board total power NOT evaluated",
+  "activity_model": "Mapped post-route functional simulation; no routing-delay glitch simulation",
+  "tool": "Vivado/XSim 2018.1",
+  "part": "xc7z010clg400-1",
+  "clock_hz": 100000000,
+  "junction_temperature_c": 25,
+  "requested_ambient_temperature_c": 25,
+  "process": "typical",
+  "voltages_v": {
+    "Vccint": 1.0,
+    "Vccaux": 1.8,
+    "Vccbram": 1.0
+  },
+  "inputs": [
+    1,
+    2,
+    -3,
+    4
+  ],
+  "batch_cycles": 14,
+  "setup_excluded_ns": 300,
+  "mapping": {
+    "ram_cell": "source_memory/memory_reg",
+    "dsp_cell": "y_reg",
+    "ram_read_pin": "source_memory/memory_reg/ENBWREN",
+    "weight_load_pin": "y_reg/CEB2",
+    "ram_read_net": "source_memory/source_read_enable",
+    "weight_load_net": "weight_register_load",
+    "dsp_breg": "1",
+    "dsp_areg": "1",
+    "ram_loc": "RAMB18_X1Y20",
+    "dsp_loc": "DSP48_X1Y20",
+    "clock_ns": "10"
+  },
+  "checkpoint_sha256": "259a163b25b3bce5b0c76149ee7859b7d58d0d6401cb4a5d0ca3dc31cbe473db",
+  "netlist_sha256": "181caa8168d5d6df8e3bc44920cb7d75ac04b5e2713d5b092b5199c0268314a3",
+  "timing": {
+    "internal_setup_wns_ns": 5.944,
+    "internal_hold_whs_ns": 0.143,
+    "pulse_width_slack_ns": 4.5,
+    "inputs_without_delay_constraints": 46,
+    "outputs_without_delay_constraints": 38,
+    "scope": "Internal registered paths meet the 10 ns clock constraint; boundary timing and global clock delay/skew are not signed off by this OOC run."
+  },
+  "cases": [
+    {
+      "name": "weight7_mode0",
+      "work": {
+        "mode": 0,
+        "weight": 7,
+        "batches": 1024,
+        "reads": 4096,
+        "loads": 4096,
+        "physical_reads": 4096,
+        "physical_loads": 4096,
+        "products": 4096,
+        "captures": 4096,
+        "completions": 1024,
+        "window_ns": 143360
+      },
+      "saif_duration_ps": 143360000,
+      "saif_sha256": "f40ff2fa8d948728a7d26a76b3168634ad27e0b4f360c09f826ca6ea0cfb6b3c",
+      "matched_design_nets": 130,
+      "total_design_nets": 130,
+      "activity": {
+        "logical_read": {
+          "T0": 102400000,
+          "T1": 40960000,
+          "TX": 0,
+          "TZ": 0,
+          "TB": 0,
+          "TC": 8192,
+          "static_probability": 0.2857142857142857,
+          "transitions_per_second": 57142857.14285714
+        },
+        "logical_load": {
+          "T0": 102400000,
+          "T1": 40960000,
+          "TX": 0,
+          "TZ": 0,
+          "TB": 0,
+          "TC": 8192,
+          "static_probability": 0.2857142857142857,
+          "transitions_per_second": 57142857.14285714
+        },
+        "physical_read": {
+          "T0": 102400000,
+          "T1": 40960000,
+          "TX": 0,
+          "TZ": 0,
+          "TB": 0,
+          "TC": 8192,
+          "static_probability": 0.2857142857142857,
+          "transitions_per_second": 57142857.14285714
+        },
+        "physical_load": {
+          "T0": 102400000,
+          "T1": 40960000,
+          "TX": 0,
+          "TZ": 0,
+          "TB": 0,
+          "TC": 8192,
+          "static_probability": 0.2857142857142857,
+          "transitions_per_second": 57142857.14285714
+        },
+        "core_clock": {
+          "T0": 71680000,
+          "T1": 71680000,
+          "TX": 0,
+          "TZ": 0,
+          "TB": 0,
+          "TC": 28672,
+          "static_probability": 0.5,
+          "transitions_per_second": 200000000.0
+        },
+        "ram_clock": {
+          "T0": 71680000,
+          "T1": 71680000,
+          "TX": 0,
+          "TZ": 0,
+          "TB": 0,
+          "TC": 28672,
+          "static_probability": 0.5,
+          "transitions_per_second": 200000000.0
+        },
+        "dsp_clock": {
+          "T0": 71680000,
+          "T1": 71680000,
+          "TX": 0,
+          "TZ": 0,
+          "TB": 0,
+          "TC": 28672,
+          "static_probability": 0.5,
+          "transitions_per_second": 200000000.0
+        }
+      },
+      "mem_q_data_transitions": 3,
+      "dsp_b_input_data_transitions": 3,
+      "dsp_a_input_data_transitions": 63487,
+      "x_input_data_transitions": 34815,
+      "y_output_data_transitions": 67583,
+      "power_w": {
+        "core_dynamic": 0.001068883,
+        "source_bram_primitive": 0.00025038699999999997,
+        "source_memory_hierarchy": 0.00028769,
+        "dsp": 0.000286719,
+        "clocks_within_ooc_core": 0.00030047399999999996,
+        "signals": 0.00010638899999999999,
+        "slice_logic": 0.000124915,
+        "isolated_design_device_static": 0.089340359,
+        "isolated_design_device_total": 0.090409242
+      },
+      "vivado_confidence": "High",
+      "reported_environment": {
+        "Ambient Temp (C)": [
+          "24.0"
+        ],
+        "ThetaJA (C/W)": [
+          "11.5"
+        ],
+        "Airflow (LFM)": [
+          "250"
+        ],
+        "Heat Sink": [
+          "none"
+        ],
+        "ThetaSA (C/W)": [
+          "0.0"
+        ],
+        "Board Selection": [
+          "medium (10\"x10\")"
+        ],
+        "# of Board Layers": [
+          "8to11 (8 to 11 Layers)"
+        ],
+        "Board Temperature (C)": [
+          "25.0"
+        ]
+      },
+      "energy_per_product_pj": {
+        "core_dynamic": 37.410905,
+        "source_bram_primitive": 8.763544999999999,
+        "source_memory_hierarchy": 10.06915,
+        "dsp": 10.035165000000001,
+        "clocks_within_ooc_core": 10.516589999999999,
+        "signals": 3.7236149999999997,
+        "slice_logic": 4.372025,
+        "isolated_design_device_static": 3126.9125649999996,
+        "isolated_design_device_total": 3164.3234700000003
+      }
+    },
+    {
+      "name": "weight7_mode1",
+      "work": {
+        "mode": 1,
+        "weight": 7,
+        "batches": 1024,
+        "reads": 1024,
+        "loads": 1024,
+        "physical_reads": 1024,
+        "physical_loads": 1024,
+        "products": 4096,
+        "captures": 4096,
+        "completions": 1024,
+        "window_ns": 143360
+      },
+      "saif_duration_ps": 143360000,
+      "saif_sha256": "b43ca3b3f57e8be8240bbd2db525d0fff46fee5efe68d91a58ea623b3f1480a4",
+      "matched_design_nets": 130,
+      "total_design_nets": 130,
+      "activity": {
+        "logical_read": {
+          "T0": 133120000,
+          "T1": 10240000,
+          "TX": 0,
+          "TZ": 0,
+          "TB": 0,
+          "TC": 2048,
+          "static_probability": 0.07142857142857142,
+          "transitions_per_second": 14285714.285714285
+        },
+        "logical_load": {
+          "T0": 133120000,
+          "T1": 10240000,
+          "TX": 0,
+          "TZ": 0,
+          "TB": 0,
+          "TC": 2048,
+          "static_probability": 0.07142857142857142,
+          "transitions_per_second": 14285714.285714285
+        },
+        "physical_read": {
+          "T0": 133120000,
+          "T1": 10240000,
+          "TX": 0,
+          "TZ": 0,
+          "TB": 0,
+          "TC": 2048,
+          "static_probability": 0.07142857142857142,
+          "transitions_per_second": 14285714.285714285
+        },
+        "physical_load": {
+          "T0": 133120000,
+          "T1": 10240000,
+          "TX": 0,
+          "TZ": 0,
+          "TB": 0,
+          "TC": 2048,
+          "static_probability": 0.07142857142857142,
+          "transitions_per_second": 14285714.285714285
+        },
+        "core_clock": {
+          "T0": 71680000,
+          "T1": 71680000,
+          "TX": 0,
+          "TZ": 0,
+          "TB": 0,
+          "TC": 28672,
+          "static_probability": 0.5,
+          "transitions_per_second": 200000000.0
+        },
+        "ram_clock": {
+          "T0": 71680000,
+          "T1": 71680000,
+          "TX": 0,
+          "TZ": 0,
+          "TB": 0,
+          "TC": 28672,
+          "static_probability": 0.5,
+          "transitions_per_second": 200000000.0
+        },
+        "dsp_clock": {
+          "T0": 71680000,
+          "T1": 71680000,
+          "TX": 0,
+          "TZ": 0,
+          "TB": 0,
+          "TC": 28672,
+          "static_probability": 0.5,
+          "transitions_per_second": 200000000.0
+        }
+      },
+      "mem_q_data_transitions": 3,
+      "dsp_b_input_data_transitions": 3,
+      "dsp_a_input_data_transitions": 63487,
+      "x_input_data_transitions": 34815,
+      "y_output_data_transitions": 67583,
+      "power_w": {
+        "core_dynamic": 0.000869523,
+        "source_bram_primitive": 6.2597e-05,
+        "source_memory_hierarchy": 9.4158e-05,
+        "dsp": 0.000286719,
+        "clocks_within_ooc_core": 0.00030047399999999996,
+        "signals": 9.931799999999999e-05,
+        "slice_logic": 0.000120416,
+        "isolated_design_device_static": 0.089340359,
+        "isolated_design_device_total": 0.09020988299999999
+      },
+      "vivado_confidence": "High",
+      "reported_environment": {
+        "Ambient Temp (C)": [
+          "24.0"
+        ],
+        "ThetaJA (C/W)": [
+          "11.5"
+        ],
+        "Airflow (LFM)": [
+          "250"
+        ],
+        "Heat Sink": [
+          "none"
+        ],
+        "ThetaSA (C/W)": [
+          "0.0"
+        ],
+        "Board Selection": [
+          "medium (10\"x10\")"
+        ],
+        "# of Board Layers": [
+          "8to11 (8 to 11 Layers)"
+        ],
+        "Board Temperature (C)": [
+          "25.0"
+        ]
+      },
+      "energy_per_product_pj": {
+        "core_dynamic": 30.433305,
+        "source_bram_primitive": 2.190895,
+        "source_memory_hierarchy": 3.2955300000000003,
+        "dsp": 10.035165000000001,
+        "clocks_within_ooc_core": 10.516589999999999,
+        "signals": 3.4761299999999995,
+        "slice_logic": 4.21456,
+        "isolated_design_device_static": 3126.9125649999996,
+        "isolated_design_device_total": 3157.3459049999997
+      }
+    },
+    {
+      "name": "weight9_mode0",
+      "work": {
+        "mode": 0,
+        "weight": 9,
+        "batches": 1024,
+        "reads": 4096,
+        "loads": 4096,
+        "physical_reads": 4096,
+        "physical_loads": 4096,
+        "products": 4096,
+        "captures": 4096,
+        "completions": 1024,
+        "window_ns": 143360
+      },
+      "saif_duration_ps": 143360000,
+      "saif_sha256": "b74efb8d0f70ed5068172791c54c66dd7e6dc41af3c7d317016add0505d51288",
+      "matched_design_nets": 130,
+      "total_design_nets": 130,
+      "activity": {
+        "logical_read": {
+          "T0": 102400000,
+          "T1": 40960000,
+          "TX": 0,
+          "TZ": 0,
+          "TB": 0,
+          "TC": 8192,
+          "static_probability": 0.2857142857142857,
+          "transitions_per_second": 57142857.14285714
+        },
+        "logical_load": {
+          "T0": 102400000,
+          "T1": 40960000,
+          "TX": 0,
+          "TZ": 0,
+          "TB": 0,
+          "TC": 8192,
+          "static_probability": 0.2857142857142857,
+          "transitions_per_second": 57142857.14285714
+        },
+        "physical_read": {
+          "T0": 102400000,
+          "T1": 40960000,
+          "TX": 0,
+          "TZ": 0,
+          "TB": 0,
+          "TC": 8192,
+          "static_probability": 0.2857142857142857,
+          "transitions_per_second": 57142857.14285714
+        },
+        "physical_load": {
+          "T0": 102400000,
+          "T1": 40960000,
+          "TX": 0,
+          "TZ": 0,
+          "TB": 0,
+          "TC": 8192,
+          "static_probability": 0.2857142857142857,
+          "transitions_per_second": 57142857.14285714
+        },
+        "core_clock": {
+          "T0": 71680000,
+          "T1": 71680000,
+          "TX": 0,
+          "TZ": 0,
+          "TB": 0,
+          "TC": 28672,
+          "static_probability": 0.5,
+          "transitions_per_second": 200000000.0
+        },
+        "ram_clock": {
+          "T0": 71680000,
+          "T1": 71680000,
+          "TX": 0,
+          "TZ": 0,
+          "TB": 0,
+          "TC": 28672,
+          "static_probability": 0.5,
+          "transitions_per_second": 200000000.0
+        },
+        "dsp_clock": {
+          "T0": 71680000,
+          "T1": 71680000,
+          "TX": 0,
+          "TZ": 0,
+          "TB": 0,
+          "TC": 28672,
+          "static_probability": 0.5,
+          "transitions_per_second": 200000000.0
+        }
+      },
+      "mem_q_data_transitions": 2,
+      "dsp_b_input_data_transitions": 2,
+      "dsp_a_input_data_transitions": 63487,
+      "x_input_data_transitions": 34815,
+      "y_output_data_transitions": 67582,
+      "power_w": {
+        "core_dynamic": 0.001068875,
+        "source_bram_primitive": 0.000250386,
+        "source_memory_hierarchy": 0.000287689,
+        "dsp": 0.000286714,
+        "clocks_within_ooc_core": 0.00030047399999999996,
+        "signals": 0.000106388,
+        "slice_logic": 0.000124915,
+        "isolated_design_device_static": 0.089340359,
+        "isolated_design_device_total": 0.09040923399999999
+      },
+      "vivado_confidence": "High",
+      "reported_environment": {
+        "Ambient Temp (C)": [
+          "24.0"
+        ],
+        "ThetaJA (C/W)": [
+          "11.5"
+        ],
+        "Airflow (LFM)": [
+          "250"
+        ],
+        "Heat Sink": [
+          "none"
+        ],
+        "ThetaSA (C/W)": [
+          "0.0"
+        ],
+        "Board Selection": [
+          "medium (10\"x10\")"
+        ],
+        "# of Board Layers": [
+          "8to11 (8 to 11 Layers)"
+        ],
+        "Board Temperature (C)": [
+          "25.0"
+        ]
+      },
+      "energy_per_product_pj": {
+        "core_dynamic": 37.410624999999996,
+        "source_bram_primitive": 8.76351,
+        "source_memory_hierarchy": 10.069115,
+        "dsp": 10.034989999999999,
+        "clocks_within_ooc_core": 10.516589999999999,
+        "signals": 3.7235799999999997,
+        "slice_logic": 4.372025,
+        "isolated_design_device_static": 3126.9125649999996,
+        "isolated_design_device_total": 3164.3231899999996
+      }
+    },
+    {
+      "name": "weight9_mode1",
+      "work": {
+        "mode": 1,
+        "weight": 9,
+        "batches": 1024,
+        "reads": 1024,
+        "loads": 1024,
+        "physical_reads": 1024,
+        "physical_loads": 1024,
+        "products": 4096,
+        "captures": 4096,
+        "completions": 1024,
+        "window_ns": 143360
+      },
+      "saif_duration_ps": 143360000,
+      "saif_sha256": "7a686c78abc228974a131fccb276cb3186d5b968d8a82cc720ae7c920d0dd928",
+      "matched_design_nets": 130,
+      "total_design_nets": 130,
+      "activity": {
+        "logical_read": {
+          "T0": 133120000,
+          "T1": 10240000,
+          "TX": 0,
+          "TZ": 0,
+          "TB": 0,
+          "TC": 2048,
+          "static_probability": 0.07142857142857142,
+          "transitions_per_second": 14285714.285714285
+        },
+        "logical_load": {
+          "T0": 133120000,
+          "T1": 10240000,
+          "TX": 0,
+          "TZ": 0,
+          "TB": 0,
+          "TC": 2048,
+          "static_probability": 0.07142857142857142,
+          "transitions_per_second": 14285714.285714285
+        },
+        "physical_read": {
+          "T0": 133120000,
+          "T1": 10240000,
+          "TX": 0,
+          "TZ": 0,
+          "TB": 0,
+          "TC": 2048,
+          "static_probability": 0.07142857142857142,
+          "transitions_per_second": 14285714.285714285
+        },
+        "physical_load": {
+          "T0": 133120000,
+          "T1": 10240000,
+          "TX": 0,
+          "TZ": 0,
+          "TB": 0,
+          "TC": 2048,
+          "static_probability": 0.07142857142857142,
+          "transitions_per_second": 14285714.285714285
+        },
+        "core_clock": {
+          "T0": 71680000,
+          "T1": 71680000,
+          "TX": 0,
+          "TZ": 0,
+          "TB": 0,
+          "TC": 28672,
+          "static_probability": 0.5,
+          "transitions_per_second": 200000000.0
+        },
+        "ram_clock": {
+          "T0": 71680000,
+          "T1": 71680000,
+          "TX": 0,
+          "TZ": 0,
+          "TB": 0,
+          "TC": 28672,
+          "static_probability": 0.5,
+          "transitions_per_second": 200000000.0
+        },
+        "dsp_clock": {
+          "T0": 71680000,
+          "T1": 71680000,
+          "TX": 0,
+          "TZ": 0,
+          "TB": 0,
+          "TC": 28672,
+          "static_probability": 0.5,
+          "transitions_per_second": 200000000.0
+        }
+      },
+      "mem_q_data_transitions": 2,
+      "dsp_b_input_data_transitions": 2,
+      "dsp_a_input_data_transitions": 63487,
+      "x_input_data_transitions": 34815,
+      "y_output_data_transitions": 67582,
+      "power_w": {
+        "core_dynamic": 0.000869516,
+        "source_bram_primitive": 6.2597e-05,
+        "source_memory_hierarchy": 9.415699999999999e-05,
+        "dsp": 0.000286714,
+        "clocks_within_ooc_core": 0.00030047399999999996,
+        "signals": 9.931699999999998e-05,
+        "slice_logic": 0.000120416,
+        "isolated_design_device_static": 0.089340359,
+        "isolated_design_device_total": 0.090209875
+      },
+      "vivado_confidence": "High",
+      "reported_environment": {
+        "Ambient Temp (C)": [
+          "24.0"
+        ],
+        "ThetaJA (C/W)": [
+          "11.5"
+        ],
+        "Airflow (LFM)": [
+          "250"
+        ],
+        "Heat Sink": [
+          "none"
+        ],
+        "ThetaSA (C/W)": [
+          "0.0"
+        ],
+        "Board Selection": [
+          "medium (10\"x10\")"
+        ],
+        "# of Board Layers": [
+          "8to11 (8 to 11 Layers)"
+        ],
+        "Board Temperature (C)": [
+          "25.0"
+        ]
+      },
+      "energy_per_product_pj": {
+        "core_dynamic": 30.433059999999998,
+        "source_bram_primitive": 2.190895,
+        "source_memory_hierarchy": 3.2954949999999994,
+        "dsp": 10.034989999999999,
+        "clocks_within_ooc_core": 10.516589999999999,
+        "signals": 3.4760949999999995,
+        "slice_logic": 4.21456,
+        "isolated_design_device_static": 3126.9125649999996,
+        "isolated_design_device_total": 3157.3456249999995
+      }
+    }
+  ],
+  "comparisons": [
+    {
+      "weight": 7,
+      "a_minus_b_power_w": {
+        "core_dynamic": 0.0001993600000000001,
+        "source_bram_primitive": 0.00018778999999999996,
+        "source_memory_hierarchy": 0.000193532,
+        "dsp": 0.0,
+        "clocks_within_ooc_core": 0.0,
+        "signals": 7.0710000000000006e-06,
+        "slice_logic": 4.498999999999999e-06,
+        "isolated_design_device_static": 0.0,
+        "isolated_design_device_total": 0.00019935900000001006
+      },
+      "a_minus_b_energy_per_product_pj": {
+        "core_dynamic": 6.977599999999999,
+        "source_bram_primitive": 6.572649999999999,
+        "source_memory_hierarchy": 6.77362,
+        "dsp": 0.0,
+        "clocks_within_ooc_core": 0.0,
+        "signals": 0.24748500000000018,
+        "slice_logic": 0.1574650000000002,
+        "isolated_design_device_static": 0.0,
+        "isolated_design_device_total": 6.977565000000595
+      },
+      "energy_interpretation": "Average simulated-window power times matched 14-clock cadence divided by four products; not measured energy."
+    },
+    {
+      "weight": 9,
+      "a_minus_b_power_w": {
+        "core_dynamic": 0.00019935899999999997,
+        "source_bram_primitive": 0.000187789,
+        "source_memory_hierarchy": 0.000193532,
+        "dsp": 0.0,
+        "clocks_within_ooc_core": 0.0,
+        "signals": 7.071000000000014e-06,
+        "slice_logic": 4.498999999999999e-06,
+        "isolated_design_device_static": 0.0,
+        "isolated_design_device_total": 0.00019935899999999618
+      },
+      "a_minus_b_energy_per_product_pj": {
+        "core_dynamic": 6.9775649999999985,
+        "source_bram_primitive": 6.572615000000001,
+        "source_memory_hierarchy": 6.773620000000001,
+        "dsp": 0.0,
+        "clocks_within_ooc_core": 0.0,
+        "signals": 0.24748500000000018,
+        "slice_logic": 0.1574650000000002,
+        "isolated_design_device_static": 0.0,
+        "isolated_design_device_total": 6.977565000000141
+      },
+      "energy_interpretation": "Average simulated-window power times matched 14-clock cadence divided by four products; not measured energy."
+    }
+  ],
+  "power_reporting_resolution_w": 1e-09,
+  "limitations": [
+    "Simulation-based vendor power estimate, not measured rail power.",
+    "Separate out-of-context placement; excludes board controller, repeater, VIO, ILA, clock wizard and board power supplies.",
+    "Out-of-context boundary ports have no physical partition locations and clock source is unspecified; their boundary routes and global clock delay/skew are not represented.",
+    "Clock activity comes from the 10 ns timing constraint; Vivado ignores SAIF annotation on clock nets.",
+    "Physical primitive enables and data activity are covered; primitive internal transistor power remains a vendor model.",
+    "Vivado High confidence is a tool classification, not physical power validation; numeric display resolution is not model accuracy.",
+    "An unchanged weight output does not imply no BRAM reads or no register loads."
+  ]
+}

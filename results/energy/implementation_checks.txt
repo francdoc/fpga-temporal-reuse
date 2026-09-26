@@ -1,0 +1,6 @@
+Core RAM: repeater/core/source_memory/memory_reg; READ_WIDTH_B=18 DOB_REG=0
+Core DSP: repeater/core/y_reg; total DSP count=1; BREG=1
+ILA probes 2/3 share physical source-read/weight-load enable nets
+Experiment clock: clk_out1_energy_clock; period 10 ns
+Setup, hold, check_timing, pulse-width and error-level DRC checks passed
+ENERGY_IMPLEMENTATION_CHECKS_PASS
