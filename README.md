@@ -4,9 +4,16 @@ A controlled A/B experiment on the Arty Z7-10 exploring how retaining a
 weight in a register affects memory accesses, switching activity and
 estimated energy.
 
-**Status: project specification only.** Written on 26 September 2026. The
-experiment has not been implemented, simulated, synthesized or measured.
-Expected values below are acceptance criteria, not recorded results.
+**Status: V1 implemented and verified on the physical FPGA.** Updated on
+26 September 2026. Simulation, full-board implementation, timing and all
+four physical A/B runs pass on the Arty Z7-10 Rev. D. Both modes produce
+identical correct products in 12 clock periods, with four source reads in
+A and one in B. Power and energy differences have not been evaluated.
+[Results and raw hardware captures](results/README.md) record the evidence.
+The [interactive VIO/ILA demo](docs/live-demo.md) also has
+[verified weight-7 and weight-9 results](results/interactive/README.md).
+[Vivado view commands](docs/vivado-views.md) reopen the floorplan, schematic,
+VIO/ILA panels and saved hardware waveforms.
 
 ## Overview
 
@@ -352,24 +359,33 @@ Physical execution in step 5 is required for completion.
 | 6 | Optionally capture matched activity and estimate power for A and B on the same routed design. Depends on step 4; not a prerequisite for step 5. | Two activity files, annotation reports and power/energy comparison. | Equivalent workloads and intervals; source enable correctly annotated; assumptions and total/component estimates reported. An energy improvement is not required to pass. |
 | 7 | Optionally measure voltage/current if suitable instrumentation is available. Depends on step 5. | Measurement setup, raw observations, energy per batch and uncertainty. | Defined electrical boundary and matched trials; below-resolution differences explicitly reported. |
 
-Planned source layout:
+Source layout:
 
 ```text
-README.md                       this specification
+README.md                       specification, execution guide and results
 rtl/source_bram.vhd             runtime-writable synchronous source memory
 rtl/temporal_reuse.vhd          scalar datapath and small controller
 tb/tb_temporal_reuse.vhd        stimulus, expected results and assertions
-scripts/run_sim.tcl             compile, elaborate and run using XSim
+scripts/run_sim.tcl             compile and run both self-checking XSim tests
 scripts/trace.tcl               capture the required signals
+rtl/board_control.vhd           request pulses and four-input snapshot/sequencer
+tb/tb_board_control.vhd         control checks with simulated core requests
+tb/test_capture_checker.py      host-side capture-validator unit tests
 rtl/board_top.vhd               required JTAG-controlled board wrapper
 constraints/arty_z7_10.xdc      verified board pins and clock constraints
 scripts/build_board.tcl         reproducible debug/clock IP setup and full bitstream build
+scripts/verify_implementation.tcl routed RAM-enable, clock and timing checks
+scripts/hardware_session.sh     private USB/JTAG server and Vivado session
+scripts/discover_board.tcl      JTAG target/device discovery without programming
+scripts/run_hardware.tcl        explicit-target programming and four A/B captures
+scripts/check_capture.py        check exported ILA CSV products, cycles and enables
 ```
 
-Only this README exists at specification time. The board wrapper and build
-script follow the core simulation. Generated simulator and Vivado output
-belong outside tracked source. Section 11 documents tool access and the
-command sequences to use once the planned sources exist.
+The RTL, testbenches and scripts are implemented. The board-control test
+drives simulated `busy` and `sample_request` signals to check command handling
+and input sequencing; it does not simulate JTAG or the clock/debug IP.
+Generated simulator and Vivado output belong outside tracked source.
+Section 11 gives the simulation, build and hardware-session commands.
 
 For step 4, start with synchronous RAM inference and a block-RAM attribute,
 then inspect the result. A one-word array, fixed synthesis-time weight or
@@ -467,9 +483,14 @@ support. Check the official board schematic/reference manual and matching
 master constraints for the clock source, pin assignments and I/O standards.
 Do not guess pins or reuse constraints for the Z7-20.
 
-For Rev. B, Digilent's [Z7-10 master constraints](https://raw.githubusercontent.com/Digilent/digilent-xdc/master/Arty-Z7-10-Master.xdc)
-specify the source clock at H16 with LVCMOS33 and an 8 ns period (125 MHz).
-Check that this matches the physical board before using those assignments.
+The physical board is confirmed as an **Arty Z7-10 Rev. D**. Its Ethernet PHY
+supplies the 125 MHz PL clock at H16 with LVCMOS33, as shown in Digilent's
+[Rev. D schematic](https://files.digilent.com/resources/programmable-logic/arty-z7/arty-z7-d0-sch.PDF).
+The H16 assignment also appears in the
+[Z7-10 master constraints](https://raw.githubusercontent.com/Digilent/digilent-xdc/master/Arty-Z7-10-Master.xdc).
+The project constrains that source to 8 ns and generates a 100 MHz experiment
+clock with Clocking Wizard. Recheck the revision before using these
+constraints on another board.
 
 Use one 100 MHz experiment clock. If the board source has another frequency,
 derive the experiment clock with the appropriate clocking IP and wait for
@@ -477,6 +498,12 @@ lock before releasing reset. Constrain the actual source and generated clock;
 do not label a different-frequency source as 100 MHz. Keep the experiment,
 VIO and ILA in that clock domain. Synchronize asynchronous reset release and
 any external controls. Never gate a clock with ordinary combinational logic.
+
+The implemented wrapper samples Clocking Wizard's `locked` output through
+two clocked flip-flops initialized to the reset state. Their qualified lock
+status combines with the synchronous VIO reset request. This keeps the
+source-RAM enables free of asynchronously reset control registers. VIO reset
+does not stop the clock or reset the debug cores.
 
 The board wrapper contains:
 
@@ -537,6 +564,15 @@ observation offset when comparing the capture to Section 6; do not confuse
 debug observation latency with an extra computation cycle. The fixed core
 processing interval remains 12 clock periods from accepted start.
 
+With the implemented ILA's input pipeline depth set to zero, take the
+accepted-start sample as offset zero. Input/read enables retain the edge
+numbers in Section 6. Registered products appear at sample offsets
+`4,7,10,13`; `done` appears at offset 13. The latched mode is valid from
+offset 1 because it is updated on the start edge. `scripts/check_capture.py`
+checks these offsets, the signed products and the actual enable pulses in
+exported ILA CSV files. Checking synthetic or simulated CSVs does not
+establish physical execution.
+
 Use the same bitstream and instrumentation for every A/B pair. Programming
 volatile FPGA configuration through JTAG is sufficient for V1; autonomous
 boot from flash or an SD card is not required. Do not introduce ARM firmware,
@@ -549,11 +585,16 @@ Use the corresponding instructions for the installed Vivado version.
 
 ## 11. Software access and execution guide
 
+For interactive VIO controls and fresh ILA waveforms on the programmed board,
+see [the live demonstration guide](docs/live-demo.md).
+
 The development baseline is Linux with Vivado/XSim 2018.1 under
 `/opt/Xilinx/Vivado/2018.1`. No other project checkout is required. The setup
-script, executables and installed command documentation are available;
-experiment builds and board execution remain unverified. Other tool versions
-require a compatibility check. Use one version throughout each A/B comparison.
+script, executables and installed command documentation are available.
+Core and board-control simulation pass with this installation. The board
+build and physical execution have separate acceptance checks. Other tool
+versions require a compatibility check. Use one version throughout each A/B
+comparison.
 
 ### 11.1. Tools
 
@@ -611,38 +652,40 @@ failed-run logs.
 
 ### 11.3. Simulation command sequence
 
-These commands require the planned RTL and testbench files. They have not
-been validated for this experiment. Run from a fresh `REUSE_RUN` with the
-environment above. Stop at any failure.
+The implemented runner compiles the sources, elaborates the core and
+board-control testbenches separately and runs both with assertion and
+waveform checks. This entry point is validated with Vivado/XSim 2018.1.
+Use the environment and external `REUSE_RUN` from Section 11.2:
 
 ```bash
-"$REUSE_VIVADO_ROOT/bin/xvhdl" \
-    "$REUSE_REPO/rtl/source_bram.vhd" \
-    "$REUSE_REPO/rtl/temporal_reuse.vhd" \
-    "$REUSE_REPO/tb/tb_temporal_reuse.vhd" || exit 1
-
-"$REUSE_VIVADO_ROOT/bin/xelab" tb_temporal_reuse \
-    -debug typical -s temporal_reuse_sim || exit 1
-
-timeout --signal=TERM --kill-after=10s 180s \
-    "$REUSE_VIVADO_ROOT/bin/xsim" temporal_reuse_sim -runall
+timeout --signal=TERM --kill-after=10s 1200s \
+    "$REUSE_VIVADO_ROOT/bin/vivado" -mode batch \
+    -log "$REUSE_RUN/simulation_driver.log" \
+    -journal "$REUSE_RUN/simulation_driver.jou" \
+    -source "$REUSE_REPO/scripts/run_sim.tcl" \
+    -tclargs "$REUSE_REPO" "$REUSE_RUN/sim"
 ```
 
-The testbench must terminate after its checks and emit an unambiguous pass
-marker only after all checks pass. A successful compilation, an open GUI or
-a zero exit code alone is not the acceptance test. A timeout is not a pass.
-The simulation runner must check command status, assertion failures and that
-final marker, keeping compilation, elaboration and simulation logs separate.
+Each stage has a 180 s timeout. The runner requires both final markers,
+`TEMPORAL_REUSE_ALL_TESTS_PASSED` and `BOARD_CONTROL_SIMULATION_PASS`, then
+writes `sim/simulation_pass.txt`. It keeps compilation, elaboration and
+simulation logs separate and retains `temporal_reuse.vcd/.wdb` and
+`board_control.vcd/.wdb`. Existing output is preserved: rerun in a fresh
+directory. A zero exit code without the markers, an open GUI or a timeout
+does not establish a pass.
 
 To inspect signals, open the debug-enabled snapshot from its run directory:
 
 ```bash
+cd "$REUSE_RUN/sim" || exit 1
 "$REUSE_VIVADO_ROOT/bin/xsim" temporal_reuse_sim -gui
 ```
 
 The GUI needs a working graphical session; headless simulation does not.
-Use Section 7's signal list. `scripts/trace.tcl`, once written, should use
-`open_vcd`, `log_vcd`, `run -all` and `close_vcd` for reproducible capture.
+Use Section 7's signal list. `scripts/trace.tcl` records the selected signals
+in both WDB and VCD. XSim 2018.1 omits native enumeration, integer and Boolean
+objects from VCD; use WDB for controller states, indices and testbench
+counters. The logic-vector enables and products are present in both formats.
 A saved waveform layout records a view, not proof that assertions passed.
 
 ### 11.4. Vivado console, build and device view
@@ -667,20 +710,29 @@ Stop if the part is unavailable. Use the installed help and command files
 under `REUSE_VIVADO_ROOT/doc/eng/man` for this older release rather than
 assuming every command in newer documentation exists here.
 
-The **planned** `scripts/build_board.tcl` should accept the source root and
-output directory as its two arguments. After it exists, the batch entry is:
+`scripts/build_board.tcl` accepts the source root and a fresh output directory
+as its two arguments. It generates Clocking Wizard, VIO and ILA IP, then
+synthesizes, places and routes the complete `board_top`. The batch entry is:
 
 ```bash
 timeout --signal=TERM --kill-after=10s 1800s \
     "$REUSE_VIVADO_ROOT/bin/vivado" -mode batch \
     -log "$REUSE_RUN/build.log" -journal "$REUSE_RUN/build.jou" \
     -source "$REUSE_REPO/scripts/build_board.tcl" \
-    -tclargs "$REUSE_REPO" "$REUSE_RUN"
+    -tclargs "$REUSE_REPO" "$REUSE_RUN/build"
 ```
 
 The 1800 s limit bounds the command; it is not a build-time estimate. The
-script must build `board_top`, including clock/debug IP and verified
-constraints.
+script checks setup/hold slack, DRC errors and the core's BRAM/DSP counts
+and calls `verify_implementation.tcl` before writing the programming artifacts.
+That check verifies a shared routed net between the RAM read enable and ILA
+probe, the RAM read latency, the 10 ns experiment clock, timing-constraint
+coverage and pulse widths. Retain its `implementation_checks.txt` alongside
+`check_timing.rpt`, `timing.rpt`, `clocks.rpt` and `mapping.rpt`. Review the
+resource mapping and remaining warnings before programming.
+
+On success, the build writes `temporal_reuse.bit`, `temporal_reuse.ltx` and
+the `BOARD_BUILD_PASS` marker. It never connects to or programs a board.
 Do not expose every internal data/control signal as a package pin by
 implementing the scalar core as the board top. Core-only out-of-context
 implementation cannot replace the full-board bitstream check.
@@ -698,19 +750,14 @@ Inside its Tcl console, use `open_checkpoint` with the actual generated
 arithmetic resources and their connections. This view is the implemented
 design model, not evidence that the board executed it.
 
+See [Reopen the Vivado views](docs/vivado-views.md) for the tested cell names,
+schematic commands, offline capture replay and live Hardware Manager layout.
+
 ### 11.5. Access the physical board through JTAG
 
 This step needs the powered Arty Z7-10, a working USB data/programming
 connection and suitable host cable drivers. Tool installation alone does
 not establish any of those conditions.
-
-The recorded USB enumeration sequence contained an FTDI `0403:6010`
-interface at Bus 003 Device 006. It was absent from the next listing and
-reappeared as Device 007:
-
-```text
-Bus 003 Device 007: ID 0403:6010 Future Technology Devices International, Ltd FT2232C/D/H Dual UART/FIFO IC
-```
 
 Check for the interface by USB vendor/product ID:
 
@@ -718,27 +765,44 @@ Check for the interface by USB vendor/product ID:
 lsusb -d 0403:6010
 ```
 
-Bus/device numbers can change after reconnection; `003/007` is not a stable
-programming target. The `0403:6010` ID identifies a USB interface type, not
-the FPGA part or a unique board. The recorded listing establishes USB
-enumeration only, not current availability, JTAG access or successful
-programming. Use Hardware Manager to identify the intended FPGA target.
-Confirm board revision and constraints separately as described in Section 10.1.
+Bus/device numbers can change after reconnection. The `0403:6010` ID identifies
+a USB interface type, not the FPGA part or a unique board. Use Hardware
+Manager to identify the intended FPGA target. Read-only JTAG discovery on the
+confirmed Rev. D board has returned `arm_dap_0` and `xc7z010_1`; this establishes
+device access, not programming or experiment execution.
 
-If no suitable hardware server is already running, use a separate terminal
-in an external run directory. Set up its environment explicitly and start:
+`scripts/hardware_session.sh` starts `hw_server` and the Vivado client in
+one private user/network namespace. This also isolates the auxiliary GDB
+listeners opened by the 2018.1 server. Binding the main server to loopback
+alone does not isolate those auxiliary listeners. The launcher needs `unshare`,
+`ip`, enabled unprivileged user namespaces and existing USB access. It does
+not require `sudo` or change host driver configuration.
+
+Run discovery in a fresh external directory:
 
 ```bash
-export REUSE_VIVADO_ROOT="${REUSE_VIVADO_ROOT:-/opt/Xilinx/Vivado/2018.1}"
-source "$REUSE_VIVADO_ROOT/settings64.sh" || exit 1
-"$REUSE_VIVADO_ROOT/bin/hw_server"
+export REUSE_DISCOVERY="$(mktemp -d "$REUSE_RUN/discovery.XXXXXX")"
+cd "$REUSE_DISCOVERY" || exit 1
+bash "$REUSE_REPO/scripts/hardware_session.sh" \
+    "$REUSE_REPO/scripts/discover_board.tcl"
 ```
 
-Keep that terminal available. Use a trusted local host and restrict network
-access to the server; connecting to `localhost` does not by itself prove
-the server listens only on loopback. Do not expose it to public networks.
+The launcher retains `hardware_server.log`, `hardware_client.log` and the
+Vivado journal, bounds the client run to 300 s and stops its server afterward.
+It refuses to overwrite existing session logs. `discover_board.tcl` opens
+targets to list their devices, then closes the connection without programming.
 
-In the Vivado Tcl console, discover targets without programming anything:
+On the tested Linux host, Hardware Manager shutdown with the bundled 2018.1
+libraries crashed. The launcher preloads the existing host `libudev.so.1`
+and `libselinux.so.1` into the Vivado client process; discovery and shutdown
+then completed with exit status zero. The default paths are under
+`/lib/x86_64-linux-gnu`; `REUSE_HW_PRELOAD` accepts a colon-separated override.
+This is a process-local compatibility workaround. No installed library was
+replaced and no system package or driver was changed.
+
+Custom hardware Tcl scripts must run through the same launcher so that their
+client and server share the private namespace. `open_hw` is the documented
+2018.1 entry point:
 
 ```tcl
 open_hw
@@ -746,9 +810,9 @@ connect_hw_server -url localhost:3121
 get_hw_targets
 ```
 
-`open_hw` is the documented 2018.1 entry point. Identify the intended board
-in the returned targets. Replace the placeholder below with that exact
-target path; do not automatically select the first attached target:
+Identify the intended board in the returned targets. Replace the placeholder
+below with that exact target path; do not automatically select the first
+attached target:
 
 ```tcl
 set reuse_target [get_hw_targets {<exact target path>}]
@@ -771,6 +835,57 @@ and artifact paths explicitly before issuing the programming command.
 Then use VIO for runtime writes/mode/start and ILA for the four required
 captures. A and B run sequentially with the same bitstream. Keep cable
 serials and complete hardware-target identifiers in local records only.
+
+The implemented `run_hardware.tcl` automates those four runs. After the build
+and mapped-implementation checks pass, set `REUSE_TARGET` to the exact target
+from the local discovery log. This command programs volatile FPGA
+configuration once, loads both runtime weights and saves all four captures:
+
+```bash
+export REUSE_TARGET='<exact target path from discovery>'
+export REUSE_HARDWARE="$(mktemp -d "$REUSE_RUN/hardware.XXXXXX")"
+cd "$REUSE_HARDWARE" || exit 1
+bash "$REUSE_REPO/scripts/hardware_session.sh" \
+    "$REUSE_REPO/scripts/run_hardware.tcl" "$REUSE_TARGET" \
+    "$REUSE_RUN/build/temporal_reuse.bit" \
+    "$REUSE_RUN/build/temporal_reuse.ltx" "$REUSE_HARDWARE/captures"
+```
+
+The capture output directory must not already exist. The script saves ILA,
+CSV and VCD exports plus `programming.txt` with the programming-artifact
+hashes. `HARDWARE_CAPTURE_COMPLETE` means the exports were saved; the CSV
+checks below establish their arithmetic, timing and access-count results.
+The recorded four-run physical execution passed; see Section 13 and
+[the saved captures](results/README.md).
+
+From the directory containing the four exported CSV files, check them with:
+
+```bash
+cd "$REUSE_HARDWARE/captures" || exit 1
+python3 "$REUSE_REPO/scripts/check_capture.py" --radix HEX \
+    --run A 3 A_w3.csv --run B 3 B_w3.csv \
+    --run A -2 A_wminus2.csv --run B -2 B_wminus2.csv
+```
+
+The complete set must produce `FOUR_RUN_CAPTURE_CHECK_PASS`. Each capture
+must contain one accepted start and continue through at least relative
+sample 14. The checker uses the CSV radix metadata; use `--radix` only when
+the export omits that metadata and the probe radix is known. The tested
+2018.1 CSV export has no radix row. The hardware script explicitly selects
+HEX for every ILA probe, which is why the command above specifies HEX.
+Sample indices remain decimal. The mapped `busy` signal appears as `busy_1`;
+the checker accepts this verified probe-8 alias.
+
+The host-side validator also has negative tests, separate from the hardware
+evidence. Run these from the repository root:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tb -p 'test_*.py'
+```
+
+They use synthetic CSVs to check that bad products, extra reads, changed
+mode, missing samples, unknown output bits, an unverified probe alias and
+missing radix information are rejected.
 
 Close this connection when finished, without closing another user's session:
 
@@ -799,6 +914,8 @@ a cable-permission problem.
 | GUI unavailable | Use a desktop session for GUI work; keep batch verification separate. |
 | I/O placement fails | Verify `board_top` and actual package-pin constraints; do not add pins for internal core ports. |
 | Board not discovered | Power, USB data cable and correct connector; check enumeration with `lsusb -d 0403:6010`, then cable drivers/permissions and hardware-server discovery. USB enumeration alone does not prove JTAG access. |
+| Namespace launcher fails | Check `unshare`, `ip`, unprivileged user-namespace support and USB permissions. Retain the error; do not fall back to exposed server listeners. |
+| Hardware Manager crashes during shutdown | Check the launcher logs and the two existing host-library paths in `REUSE_HW_PRELOAD`; the documented process-local workaround was validated for discovery. |
 | Programmed but no VIO/ILA | Matching `.bit`/`.ltx`, included debug cores, running debug clock and reset/clock-lock state. |
 
 For optional power analysis, the installed command set includes
@@ -874,17 +991,41 @@ Simulation alone, isolated synthesis or a successful place-and-route run
 does not satisfy these criteria. Measured energy savings are not a
 completion requirement; physical execution of temporal reuse is.
 
-When results exist, report evidence levels separately:
+Recorded status on 26 September 2026:
 
 ```text
-simulation: pass / fail / not run
-mapped BRAM and enable checks: pass / fail / not run
-full board implementation and timing: pass / fail / not run
-physical board programming: pass / fail / not run
-physical A/B products, cycle and access checks: pass / fail / not run
-estimated energy difference: value with assumptions / inconclusive / not run
-measured board energy difference: value with uncertainty / unresolved / not run
+core simulation: pass (18 complete cases, Vivado/XSim 2018.1)
+board-control simulation: pass (simulated core handshake)
+mapped BRAM and enable checks: pass (RAM read enable and DSP weight-load enable)
+full board implementation and timing: pass (100 MHz, positive setup/hold/pulse slack)
+read-only JTAG device discovery: pass (xc7z010_1)
+physical board programming: pass (one final bitstream for all four runs)
+physical A/B products, cycle and access checks: pass (both weights, A=4/B=1 reads)
+estimated energy difference: not run
+measured board energy difference: not run
 ```
+
+[The physical results](results/README.md) include all four raw CSV captures,
+mapped-resource checks, reviewed DRC warnings and source/artifact hashes.
+The same product/read/load/cycle values in the simulation table below were
+also observed on the final programmed board.
+
+The recorded **simulation** results for the required four-input workloads are:
+
+| Run | Runtime weight | Observed products | Source reads | Weight loads | Processing periods |
+| --- | --- | --- | --- | --- | --- |
+| A | `3` | `[3,6,-9,12]` | 4 | 4 | 12 |
+| B | `3` | `[3,6,-9,12]` | 1 | 1 | 12 |
+| A | `-2` | `[-2,-4,6,-8]` | 4 | 4 | 12 |
+| B | `-2` | `[-2,-4,6,-8]` | 1 | 1 | 12 |
+
+The core suite also passes address selection, `N=1`, signed extreme operands
+and reset/restart in each processing state. It checks latched mode/address,
+actual read/load counts and weight-register retention.
+The board-control suite passes held-request, simultaneous-request and
+busy-request handling, request rearming, input snapshot isolation, capture
+order and reset/restart. Logs and WDB/VCD waveforms are retained outside Git;
+Section 11.3 regenerates them with both explicit pass markers.
 
 Update this status only from saved evidence. Record the source revision,
 tool version, exact commands, inputs, clock, expected results and actual

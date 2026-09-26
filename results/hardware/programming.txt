@@ -1,0 +1,8 @@
+Tool: 2018.1
+Part: xc7z010clg400-1
+Board: Arty Z7-10 Rev. D (operator identification)
+Clock: 100 MHz derived from 125 MHz
+Bitstream SHA256: 94135de96319756bd3e1fa129fbd9beefc9ca7a011eb2a5bb4d2aa581061fae8
+Probes SHA256: dd47effdf0e04bbffea81cf8fc3eb29fb160867df747b913252f4a505ce79c71
+One programming operation; captures in order A_w3 B_w3 A_wminus2 B_wminus2
+ILA CSV signal radix: HEX (sample indices are decimal)

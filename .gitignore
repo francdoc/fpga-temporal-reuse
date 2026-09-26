@@ -1,0 +1,14 @@
+# Generated runs belong outside the source tree.
+.Xil/
+*.jou
+*.log
+*.wdb
+*.vcd
+*.dcp
+*.bit
+*.ltx
+*.ila
+*.pb
+xsim.dir/
+__pycache__/
+hs_err_pid*.log

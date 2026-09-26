@@ -1,0 +1,18 @@
+Read enable: core/source_memory/memory_reg/ENBWREN and capture_ila/probe2[0] share a routed net
+Weight load: core/y_reg/CEB2 and capture_ila/probe3[0] share a routed net; BREG=1
+Source RAM: RAMB18_X0Y4; READ_WIDTH_B=18; DOB_REG=0
+Multiplier: core/y_reg at DSP48_X0Y4
+DSP AREG=1
+  core/y_reg/CEA1: core/<const0>
+  core/y_reg/CEA2: core/x_reg
+DSP BREG=1
+  core/y_reg/CEB1: core/<const0>
+  core/y_reg/CEB2: core/weight_register_load
+DSP operand core/y_reg/A[0]: core/x[0]
+DSP operand core/y_reg/B[0]: core/mem_q[0]
+Experiment clock: clk_out1_reuse_clock period 10.000 ns
+max slack: 3.982 ns
+min slack: 0.053 ns
+check_timing: all reported counts zero
+Pulse-width report: no violations
+IMPLEMENTATION_CHECKS_PASS

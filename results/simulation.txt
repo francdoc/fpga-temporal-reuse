@@ -1,0 +1,20 @@
+Note: CASE PASS: baseline mode='0' N=4 weight=3 reads=4 loads=4 products=4 cycles=12
+Note: CASE PASS: baseline mode='1' N=4 weight=3 reads=1 loads=1 products=4 cycles=12
+Note: CASE PASS: weight_replacement mode='0' N=4 weight=-2 reads=4 loads=4 products=4 cycles=12
+Note: CASE PASS: weight_replacement mode='1' N=4 weight=-2 reads=1 loads=1 products=4 cycles=12
+Note: CASE PASS: address_selection mode='0' N=4 weight=5 reads=4 loads=4 products=4 cycles=12
+Note: CASE PASS: address_selection mode='1' N=4 weight=5 reads=1 loads=1 products=4 cycles=12
+Note: CASE PASS: reset_restart_phase_0 mode='0' N=4 weight=-2 reads=4 loads=4 products=4 cycles=12
+Note: CASE PASS: reset_restart_phase_1 mode='0' N=4 weight=-2 reads=4 loads=4 products=4 cycles=12
+Note: CASE PASS: reset_restart_phase_2 mode='0' N=4 weight=-2 reads=4 loads=4 products=4 cycles=12
+Note: CASE PASS: reset_restart_phase_0 mode='1' N=4 weight=-2 reads=1 loads=1 products=4 cycles=12
+Note: CASE PASS: reset_restart_phase_1 mode='1' N=4 weight=-2 reads=1 loads=1 products=4 cycles=12
+Note: CASE PASS: reset_restart_phase_2 mode='1' N=4 weight=-2 reads=1 loads=1 products=4 cycles=12
+Note: CASE PASS: signed_minimum_weight mode='0' N=4 weight=-32768 reads=4 loads=4 products=4 cycles=12
+Note: CASE PASS: signed_minimum_weight mode='1' N=4 weight=-32768 reads=1 loads=1 products=4 cycles=12
+Note: CASE PASS: signed_maximum_weight mode='0' N=4 weight=32767 reads=4 loads=4 products=4 cycles=12
+Note: CASE PASS: signed_maximum_weight mode='1' N=4 weight=32767 reads=1 loads=1 products=4 cycles=12
+Note: CASE PASS: single_input mode='0' N=1 weight=3 reads=1 loads=1 products=1 cycles=3
+Note: CASE PASS: single_input mode='1' N=1 weight=3 reads=1 loads=1 products=1 cycles=3
+Note: TEMPORAL_REUSE_ALL_TESTS_PASSED
+Note: BOARD_CONTROL_SIMULATION_PASS
