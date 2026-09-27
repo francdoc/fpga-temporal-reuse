@@ -4,6 +4,10 @@ A controlled A/B experiment on the Arty Z7-10 exploring how retaining a
 weight in a register affects memory accesses, switching activity and
 estimated energy.
 
+Start with the [Quick Start](docs/quick-start.md) for the tested Linux/Vivado
+setup and the shortest route from saved-data checks to physical execution.
+The [repository map](#repository-map) identifies the source and evidence files.
+
 **Status: V1 implemented and verified on the physical FPGA.** Updated on
 26 September 2026. Simulation, full-board implementation, timing and all
 four physical A/B runs pass on the Arty Z7-10 Rev. D. Both modes produce
@@ -78,6 +82,37 @@ requires separate evaluation.
 [Section 4](#4-one-circuit-two-access-policies) and
 [Section 6](#6-exact-clock-schedule) describe the objective, datapath and
 timing. Sections 8-11 cover implementation and measurement procedures.
+
+## Repository map
+
+```text
+README.md                      circuit specification and detailed procedures
+LICENSE                        MIT license for project source and documentation
+rtl/
+  source_bram.vhd              runtime-writable source memory
+  temporal_reuse.vhd           one multiplier and the A/B access policy
+  board_control.vhd            command handling and input sequencing
+  board_top.vhd                clock, core and VIO/ILA connections
+  batch_repeater.vhd           optional autonomous repeated-batch controller
+  energy_board_top.vhd         separate board top for repeated-run experiments
+constraints/arty_z7_10.xdc      board clock/pin constraints
+tb/                           self-checking HDL tests and Python validator tests
+scripts/                      simulation, build, JTAG, capture and power runners
+docs/                         short guides listed below
+results/                      saved captures, checks and source hash manifests
+  hardware/                   four baseline FPGA captures
+  interactive/                live-demo captures with weights 7 and 9
+  energy/                     estimates and repeated-run hardware results
+```
+
+| Task | Start here |
+| --- | --- |
+| Reproduce the baseline | [Quick Start](docs/quick-start.md) |
+| Follow the arithmetic and memory controls | [Core RTL](rtl/temporal_reuse.vhd), [source BRAM](rtl/source_bram.vhd) and [core testbench](tb/tb_temporal_reuse.vhd) |
+| Change weights interactively on the FPGA | [Live demo](docs/live-demo.md) |
+| Open floorplan, schematic or waveform views | [Vivado views](docs/vivado-views.md) |
+| Run power estimates or autonomous trials | [Energy experiment](docs/energy-experiment.md) |
+| Inspect what was actually demonstrated | [Baseline results](results/README.md) and [energy results](results/energy/README.md) |
 
 ## 1. Objective and acceptance criteria
 
@@ -604,13 +639,18 @@ Use the corresponding instructions for the installed Vivado version.
 For interactive VIO controls and fresh ILA waveforms on the programmed board,
 see [the live demonstration guide](docs/live-demo.md).
 
-The development baseline is Linux with Vivado/XSim 2018.1 under
+The tested development host runs Ubuntu 22.04.5 LTS on x86-64, with
+Python 3.10.12 and Vivado/XSim 2018.1 (build 2188600) under
 `/opt/Xilinx/Vivado/2018.1`. No other project checkout is required. The setup
 script, executables and installed command documentation are available.
 Core and board-control simulation pass with this installation. The board
 build and physical execution have separate acceptance checks. Other tool
 versions require a compatibility check. Use one version throughout each A/B
 comparison.
+
+This records the working project environment, not a general compatibility
+claim for other Linux distributions or Vivado versions. The Hardware Manager
+launcher applies the process-local library workaround described in Section 11.5.
 
 ### 11.1. Tools
 
@@ -1164,3 +1204,9 @@ Report completion using Section 13's separate status fields and the
 four-run results table. Mark power and energy as `not run` unless evaluated
 under Section 9's controls. Energy analysis is optional and does not replace
 physical verification.
+
+## License
+
+Project source and documentation are available under the [MIT License](LICENSE).
+Vivado, vendor IP and referenced publications remain subject to their respective
+licenses; they are not relicensed by this repository.
