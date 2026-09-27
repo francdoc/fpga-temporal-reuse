@@ -21,6 +21,21 @@ the exact previously verified JTAG target and the matching tested artifacts.
 Do not select an arbitrary attached target. Follow README Section 11 for the
 installed Vivado version and device discovery.
 
+After the Quick Start, set these in Bash from the repository root. Replace
+the placeholders with the values printed by the successful build and target
+discovery, retaining the quotes:
+
+```bash
+export REUSE_REPO="$(pwd -P)"
+export REUSE_BUILD='<BUILD_DIR printed by build.sh>'
+export REUSE_TARGET='<complete TARGET from hardware.sh discover>'
+export REUSE_BIT="$REUSE_BUILD/temporal_reuse.bit"
+export REUSE_LTX="$REUSE_BUILD/temporal_reuse.ltx"
+```
+
+Do not use discovery's `RUN_DIR` as `REUSE_BUILD`. Finish the command-line
+hardware test and disconnect competing Hardware Manager sessions first.
+
 Run from a new external directory:
 
 ```bash

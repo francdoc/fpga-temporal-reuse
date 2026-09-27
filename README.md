@@ -8,6 +8,17 @@ Start with the [Quick Start](docs/quick-start.md) for the tested Linux/Vivado
 setup and the shortest route from saved-data checks to physical execution.
 The [repository map](#repository-map) identifies the source and evidence files.
 
+```bash
+bash scripts/verify_saved.sh   # Offline evidence and validator checks
+bash scripts/check_setup.sh    # Host/tool prerequisites; no installation
+bash scripts/simulate.sh       # Core and board-control simulations
+bash scripts/build.sh          # Full board build; does not program hardware
+```
+
+The [Quick Start hardware step](docs/quick-start.md#4-discover-program-and-capture-the-physical-fpga)
+adds explicit target discovery, programming and fresh-capture validation.
+These launchers preserve the existing Tcl runners and pass criteria.
+
 **Status: V1 implemented and verified on the physical FPGA.** Updated on
 26 September 2026. Simulation, full-board implementation, timing and all
 four physical A/B runs pass on the Arty Z7-10 Rev. D. Both modes produce
@@ -108,6 +119,8 @@ results/                      saved captures, checks and source hash manifests
 | Task | Start here |
 | --- | --- |
 | Reproduce the baseline | [Quick Start](docs/quick-start.md) |
+| Find and interpret a fresh run's results | [Reading results](docs/reading-results.md) |
+| Understand each Bash command and its board effects | [Script reference](scripts/README.md) |
 | Follow the arithmetic and memory controls | [Core RTL](rtl/temporal_reuse.vhd), [source BRAM](rtl/source_bram.vhd) and [core testbench](tb/tb_temporal_reuse.vhd) |
 | Change weights interactively on the FPGA | [Live demo](docs/live-demo.md) |
 | Open floorplan, schematic or waveform views | [Vivado views](docs/vivado-views.md) |

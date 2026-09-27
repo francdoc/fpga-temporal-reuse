@@ -1,5 +1,10 @@
 # Physical FPGA results — 26 September 2026
 
+This page records the original baseline session. For a fresh run, use
+[Reading results](../docs/reading-results.md). The later
+[operator-run reproduction](launcher-checks.md#operator-run-reproduction)
+records the Bash workflow and optional core-power estimate separately.
+
 V1 passed on an Arty Z7-10, operator-identified PCB Rev. D, using Vivado/XSim
 2018.1 (build 2188600). The final design was programmed through JTAG and all
 four runs below used that same bitstream. Both weights and all four inputs

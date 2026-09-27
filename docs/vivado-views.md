@@ -20,15 +20,18 @@ Reopening either one does not run the FPGA.
 
 ## 1. Set paths in Bash
 
-Start in the repository root. Replace the two `/path/to/...` values with the
-existing tested build directory and the original interactive capture directory.
-The latter contains `.ila` files, not just the published CSV exports.
+Start in the repository root. Replace the two `/path/to/...` values below:
+`REUSE_BUILD` is the path printed as `BUILD_DIR` by a successful `build.sh`;
+`REUSE_CAPTURE_DIR` is the path printed as `CAPTURES_DIR` by `hardware.sh run`,
+or an interactive session's capture directory. These are values to copy,
+not variables automatically exported by the launchers. The capture directory
+must contain `.ila` files, not just the published CSV exports.
 
 ```bash
 export REUSE_REPO="$(pwd -P)"
 export REUSE_VIVADO_ROOT="${REUSE_VIVADO_ROOT:-/opt/Xilinx/Vivado/2018.1}"
 export REUSE_BUILD="/path/to/tested/build-directory"
-export REUSE_CAPTURE_DIR="/path/to/interactive-session/captures"
+export REUSE_CAPTURE_DIR="/path/to/hardware-session/captures"
 export REUSE_HW_PRELOAD="${REUSE_HW_PRELOAD:-/lib/x86_64-linux-gnu/libudev.so.1:/lib/x86_64-linux-gnu/libselinux.so.1}"
 
 test -f "$REUSE_REPO/README.md" || exit 1
@@ -87,8 +90,25 @@ into the connected Hardware Manager window just to obtain a floorplan.
 
 ## 3. Reopen all saved hardware waveform tabs without the board
 
+For the four baseline captures from `hardware.sh run`, use a new offline GUI
+launched as in Section 2 and enter this in its **Vivado Tcl Console**:
+
+```tcl
+open_hw
+set reuse_capture_dir $::env(REUSE_CAPTURE_DIR)
+foreach reuse_name {A_w3 B_w3 A_wminus2 B_wminus2} {
+    set reuse_snapshot [read_hw_ila_data [file join $reuse_capture_dir ${reuse_name}.ila]]
+    display_hw_ila_data $reuse_snapshot
+}
+```
+
+Skip `open_hw` if Hardware Manager is already open. No server connection or
+board is required. These filenames differ from the interactive demo's
+`capture_*.ila` names below; choose the example matching your saved files.
+
 Use a new offline GUI launched as in Section 2, or an existing offline viewer.
-Do not run the live-demo launcher merely to read an old capture. In the
+Do not run the live-demo launcher merely to read an old capture. For the
+numbered interactive captures, use this alternative in the
 **Vivado Tcl Console**:
 
 ```tcl
