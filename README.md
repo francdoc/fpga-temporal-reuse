@@ -121,6 +121,7 @@ results/                      saved captures, checks and source hash manifests
 | Reproduce the baseline | [Quick Start](docs/quick-start.md) |
 | Find and interpret a fresh run's results | [Reading results](docs/reading-results.md) |
 | Understand each Bash command and its board effects | [Script reference](scripts/README.md) |
+| Explore the implementation in reading order | [Reading the code](docs/reading-code.md) |
 | Follow the arithmetic and memory controls | [Core RTL](rtl/temporal_reuse.vhd), [source BRAM](rtl/source_bram.vhd) and [core testbench](tb/tb_temporal_reuse.vhd) |
 | Change weights interactively on the FPGA | [Live demo](docs/live-demo.md) |
 | Open floorplan, schematic or waveform views | [Vivado views](docs/vivado-views.md) |

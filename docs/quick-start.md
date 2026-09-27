@@ -247,6 +247,7 @@ Optional power/repeater runners remain separate and unchanged.
 ## Where to go next
 
 - Understand the circuit: [README Sections 1, 4 and 6](../README.md#overview).
+- Follow the source in order: [Reading the code](reading-code.md).
 - Find source, scripts and evidence: [repository map](../README.md#repository-map).
 - Change weights and inspect fresh GUI captures: [live demo](live-demo.md).
 - Open floorplan, schematic or saved waveforms: [Vivado views](vivado-views.md).
